@@ -579,6 +579,8 @@ button, input, select { font: inherit; color: inherit; }
       linear-gradient(180deg, rgba(0,0,0,.7) 0%, rgba(0,0,0,.1) 16%, rgba(0,0,0,.15) 34%, rgba(0,0,0,.85) 56%, #000 70%),
       radial-gradient(ellipse 90% 30% at 50% 40%, rgba(227,20,27,.25), transparent 70%);
   }
+  .hero__titulo { font-size: min(2.1rem, 7.9vw); }
+  .hero__titulo .linha { white-space: nowrap; }
   .hero__acoes .btn { flex: 1 1 100%; }
   .hero__fatos { gap: 16px 20px; }
 
