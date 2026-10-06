@@ -128,26 +128,26 @@
   function usoAtual() { var r = form.querySelector('input[name="uso"]:checked'); return r ? r.value : ''; }
   function medidaAtual() { return selL.value + '/' + selP.value + ' R' + selA.value; }
 
-  var elMedidaSvg = doc.getElementById('lateral-medida');
   var elLeitura = doc.getElementById('leitura-medida');
   var elExp = doc.getElementById('leitura-exp');
-  var raios = doc.querySelector('.lateral__raios');
-  var giro = 0;
 
   function atualizarVisor() {
     var tipo = tipoAtual();
     var m = medidaAtual();
     var ehRoda = tipo === 'roda';
     form.classList.toggle('is-roda', ehRoda);
-    var texto = ehRoda ? 'RODA ARO ' + selA.value : m;
-    elMedidaSvg.textContent = texto;
-    elLeitura.textContent = ehRoda ? 'Aro ' + selA.value : m;
+    var novo = ehRoda ? 'Aro ' + selA.value : m;
+    if (elLeitura.textContent !== novo) {
+      elLeitura.textContent = novo;
+      if (!reduzMovimento) {
+        elLeitura.classList.remove('is-trocando');
+        void elLeitura.offsetWidth;
+        elLeitura.classList.add('is-trocando');
+      }
+    }
     elExp.textContent = ehRoda
       ? 'Roda aro ' + selA.value + '. Informe o veículo para conferirmos a furação.'
       : selL.value + ' mm de largura, lateral com ' + selP.value + '% dessa largura, para roda aro ' + selA.value + '.';
-    giro += 30;
-    if (raios && !reduzMovimento) raios.style.transform = 'rotate(' + giro + 'deg)';
-    window.dispatchEvent(new CustomEvent('noronha:medida', { detail: { texto: texto } }));
   }
 
   if (form) {
@@ -197,29 +197,61 @@
     });
   });
 
-  /* desenho da lateral: cravos e raios gerados aqui para manter o SVG leve */
-  (function desenharLateral() {
-    var NS = 'http://www.w3.org/2000/svg';
-    var cravos = doc.querySelector('.lateral__cravos');
-    if (cravos) {
-      for (var i = 0; i < 44; i++) {
-        var r = doc.createElementNS(NS, 'rect');
-        var largo = i % 2 ? 9 : 14;
-        r.setAttribute('x', String(200 - largo / 2)); r.setAttribute('y', '2');
-        r.setAttribute('width', String(largo)); r.setAttribute('height', i % 2 ? '14' : '20');
-        r.setAttribute('rx', '2');
-        r.setAttribute('transform', 'rotate(' + (i * 360 / 44) + ' 200 200)');
-        cravos.appendChild(r);
-      }
+  /* =========================================================
+     VÍDEO DO HERO
+     Versão vertical no celular, horizontal no desktop. Vídeo mudo e decorativo:
+     toca para todos, com botão de pausa (WCAG 2.2.2). Em economia de dados fica só a capa.
+     ========================================================= */
+  (function videoHero() {
+    var v = doc.getElementById('hero-video');
+    if (!v) return;
+    var conexao = navigator.connection || {};
+    var botao = doc.getElementById('hero-pausa');
+    if (conexao.saveData) { if (botao) botao.hidden = true; return; } // fica só a imagem de capa
+    var mq = window.matchMedia('(max-width: 820px)');
+    var visivel = true;
+    var pausadoPeloUsuario = ler('noronha_video_pausado') === '1';
+
+    function rotularBotao() {
+      if (!botao) return;
+      botao.setAttribute('aria-pressed', pausadoPeloUsuario ? 'true' : 'false');
+      botao.setAttribute('aria-label', pausadoPeloUsuario ? 'Reproduzir vídeo de fundo' : 'Pausar vídeo de fundo');
     }
-    if (raios) {
-      for (var k = 0; k < 6; k++) {
-        var p = doc.createElementNS(NS, 'path');
-        p.setAttribute('d', 'M 188 178 L 180 112 Q 200 104 220 112 L 212 178 Z');
-        p.setAttribute('transform', 'rotate(' + (k * 60) + ' 200 200)');
-        raios.appendChild(p);
-      }
+    if (botao) {
+      botao.addEventListener('click', function () {
+        pausadoPeloUsuario = !pausadoPeloUsuario;
+        gravar('noronha_video_pausado', pausadoPeloUsuario ? '1' : '0');
+        rotularBotao();
+        pausadoPeloUsuario ? v.pause() : tocar();
+      });
+      rotularBotao();
     }
+
+    function carregar() {
+      var tipo = mq.matches ? 'mobile' : 'desktop';
+      if (v.getAttribute('data-atual') === tipo) return;
+      v.setAttribute('data-atual', tipo);
+      v.classList.remove('is-tocando');
+      v.poster = v.getAttribute('data-' + tipo + '-poster');
+      v.src = v.getAttribute('data-' + tipo);
+      v.load();
+      tocar();
+    }
+    function tocar() {
+      if (!visivel || doc.hidden || pausadoPeloUsuario) return;
+      var p = v.play();
+      if (p && p.catch) p.catch(function () { /* autoplay bloqueado: fica a capa */ });
+    }
+    v.addEventListener('playing', function () { v.classList.add('is-tocando'); });
+    if (mq.addEventListener) mq.addEventListener('change', carregar);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) {
+        visivel = es[0].isIntersecting;
+        visivel ? tocar() : v.pause();
+      }).observe(v);
+    }
+    doc.addEventListener('visibilitychange', function () { doc.hidden ? v.pause() : tocar(); });
+    carregar();
   })();
 
   /* =========================================================

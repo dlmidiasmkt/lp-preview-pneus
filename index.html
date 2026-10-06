@@ -27,15 +27,15 @@
   <meta name="twitter:description" content="Pneus e rodas importados, com garantia, em até 10x e com envio para todo o Brasil.">
   <meta name="twitter:image" content="https://www.noronhapneus.com.br/assets/og-image.jpg">
 
+  <link rel="icon" href="assets/favicon-64.png" type="image/png" sizes="64x64">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,300..900&display=swap" rel="stylesheet">
-  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,300..900&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/video/hero-desktop.jpg">
   <link rel="stylesheet" href="css/style.css">
 
   <!-- Dados estruturados: loja, catálogo e ofertas -->
@@ -49,7 +49,7 @@
         "name": "Noronha Pneus e Rodas",
         "alternateName": "Noronha Pneus",
         "url": "https://www.noronhapneus.com.br/",
-        "logo": "https://www.noronhapneus.com.br/assets/favicon.svg",
+        "logo": "https://www.noronhapneus.com.br/assets/img/logo-512.png",
         "image": "https://www.noronhapneus.com.br/assets/og-image.jpg",
         "description": "Loja de pneus e rodas importados em Jaraguá do Sul (SC) para picapes, SUVs e carros. Pneus originais com garantia, varejo a partir de 1 unidade, atacado para revendedores e envio para todo o Brasil.",
         "telephone": "+55-49-99147-5797",
@@ -137,7 +137,7 @@
   <header class="topo" id="topo">
     <div class="topo__inner">
       <a class="marca" href="#topo" aria-label="Noronha Pneus e Rodas, início">
-        <svg class="marca__estrela" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2l4.6 12.1L37 14.6l-9.8 8 3.4 12.6L20 28l-10.6 7.2 3.4-12.6-9.8-8 12.4-.5z"/></svg>
+        <img class="marca__emblema" src="assets/img/logo-160.webp" srcset="assets/img/logo-160.webp 160w, assets/img/logo-320.webp 320w" sizes="88px" width="160" height="160" alt="" fetchpriority="high">
         <span class="marca__nome">Noronha</span>
         <span class="marca__sub">Pneus e rodas</span>
       </a>
@@ -158,9 +158,15 @@
     <!-- HERO -->
     <section class="hero" aria-labelledby="hero-titulo">
       <div class="hero__palco" aria-hidden="true">
-        <div class="hero__brilho"></div>
-        <canvas class="hero__canvas" id="pneu3d"></canvas>
+        <video class="hero__video" id="hero-video" muted loop playsinline preload="none"
+          poster="assets/video/hero-desktop.jpg"
+          data-desktop="assets/video/hero-desktop.mp4" data-desktop-poster="assets/video/hero-desktop.jpg"
+          data-mobile="assets/video/hero-desktop.mp4" data-mobile-poster="assets/video/hero-desktop.jpg"></video>
+        <div class="hero__veu"></div>
       </div>
+      <button class="hero__pausa" id="hero-pausa" type="button" aria-label="Pausar vídeo de fundo" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-pausa" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/><path class="i-play" d="M8 5v14l11-7z"/></svg>
+      </button>
       <div class="hero__texto">
         <p class="hero__selo">5 mil clientes atendidos em todo o Brasil</p>
         <h1 id="hero-titulo" class="hero__titulo">
@@ -203,36 +209,14 @@
     <section class="medida" id="medida" aria-labelledby="medida-titulo">
       <div class="medida__inner">
         <div class="medida__visor">
-          <svg class="lateral" viewBox="0 0 400 400" role="img" aria-labelledby="lateral-desc">
-            <desc id="lateral-desc">Lateral de pneu mostrando a medida escolhida</desc>
-            <defs>
-              <radialGradient id="g-borracha" cx="50%" cy="45%" r="60%">
-                <stop offset="0" stop-color="#2b2c30"/>
-                <stop offset="1" stop-color="#0c0c0d"/>
-              </radialGradient>
-              <linearGradient id="g-cromo" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#f4f5f7"/>
-                <stop offset=".45" stop-color="#8d929a"/>
-                <stop offset=".55" stop-color="#d9dce0"/>
-                <stop offset="1" stop-color="#55595f"/>
-              </linearGradient>
-              <path id="arco-topo" d="M 70 200 A 130 130 0 0 1 330 200"/>
-              <path id="arco-base" d="M 52 200 A 148 148 0 0 0 348 200"/>
-            </defs>
-            <circle cx="200" cy="200" r="196" fill="url(#g-borracha)"/>
-            <g class="lateral__cravos" fill="#050505">
-              <!-- cravos gerados por JS -->
-            </g>
-            <circle cx="200" cy="200" r="176" fill="none" stroke="#000" stroke-opacity=".6" stroke-width="2"/>
-            <circle cx="200" cy="200" r="96" fill="url(#g-cromo)"/>
-            <circle cx="200" cy="200" r="96" fill="none" stroke="#000" stroke-width="3"/>
-            <g class="lateral__raios" fill="#0b0b0c"></g>
-            <circle cx="200" cy="200" r="20" fill="#e3141b"/>
-            <text class="lateral__txt lateral__txt--marca"><textPath href="#arco-topo" startOffset="50%" text-anchor="middle">NORONHA · PNEUS E RODAS</textPath></text>
-            <text class="lateral__txt lateral__txt--medida"><textPath href="#arco-base" startOffset="50%" text-anchor="middle" id="lateral-medida">265/70 R16</textPath></text>
-          </svg>
+          <figure class="medida__foto">
+            <img src="assets/img/pneu-at.webp" width="1280" height="1280" alt="Banda de rodagem de pneu all-terrain importado" loading="lazy" decoding="async">
+            <figcaption class="medida__selo">
+              <span class="medida__selo-rot">Sua medida</span>
+              <span class="medida__num" id="leitura-medida">265/70 R16</span>
+            </figcaption>
+          </figure>
           <p class="medida__leitura" aria-live="polite">
-            <span class="medida__num" id="leitura-medida">265/70 R16</span>
             <span class="medida__exp" id="leitura-exp">265 mm de largura, lateral com 70% dessa largura, para roda aro 16.</span>
           </p>
         </div>
@@ -525,9 +509,5 @@
   </svg>
 
   <script src="js/main.js" defer></script>
-  <script type="importmap">
-  { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
-  </script>
-  <script type="module" src="js/pneu3d.js"></script>
 </body>
 </html>
