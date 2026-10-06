@@ -182,7 +182,7 @@ button, input, select { font: inherit; color: inherit; }
 .hero {
   position: relative; overflow: hidden;
   min-height: 100svh;
-  display: grid; align-items: center;
+  display: grid; grid-template-columns: minmax(0, 1fr); align-items: center;
   padding: 150px var(--borda) 80px;
 }
 .parede {
