@@ -207,7 +207,7 @@ button, input, select { font: inherit; color: inherit; }
     linear-gradient(90deg, #000 0%, rgba(0,0,0,.94) 28%, rgba(0,0,0,.6) 50%, rgba(0,0,0,.18) 72%, rgba(0,0,0,.4) 100%),
     radial-gradient(ellipse 45% 55% at 78% 62%, rgba(227,20,27,.26), transparent 70%);
 }
-.hero__texto { position: relative; z-index: 2; max-width: 760px; }
+.hero__texto { position: relative; z-index: 2; max-width: 760px; text-shadow: 0 1px 2px rgba(0,0,0,.6), 0 2px 18px rgba(0,0,0,.5); }
 .hero__selo { display: inline-flex; align-items: center; gap: 10px; color: var(--cromo); font-weight: 600; font-size: .95rem; margin-bottom: 22px; }
 .hero__estrelas { color: #f5b301; letter-spacing: .12em; flex: none; }
 .hero__selo q { color: var(--branco); font-weight: 700; font-style: italic; quotes: "“" "”"; }
@@ -219,7 +219,7 @@ button, input, select { font: inherit; color: inherit; }
 }
 .hero__titulo .linha { display: block; width: max-content; max-width: 100%; padding-right: .12em; }
 @media (min-width: 821px) { .hero__titulo .linha { white-space: nowrap; max-width: none; } }
-.hero__titulo .linha:last-child { background: var(--metal); -webkit-background-clip: text; background-clip: text; color: transparent; font-style: italic; }
+.hero__titulo .linha--marca { text-shadow: none; filter: drop-shadow(0 2px 12px rgba(0,0,0,.55)); background: var(--metal); -webkit-background-clip: text; background-clip: text; color: transparent; font-style: italic; }
 .hero__lead { margin-top: 26px; max-width: 48ch; font-size: var(--t-1); color: var(--texto); line-height: 1.55; }
 .hero__acoes { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 14px; }
 .hero__fatos {
@@ -571,7 +571,7 @@ button, input, select { font: inherit; color: inherit; }
   .topo.is-solido .marca__emblema { width: 46px; height: 46px; }
 
   /* hero: duas faixas de fotos inclinadas acima do texto */
-  .hero { align-items: end; padding: 50svh var(--gutter) 40px; }
+  .hero { align-items: end; padding: 40svh var(--gutter) 40px; }
   .parede {
     top: 76px; left: -20%; right: auto; width: 140%; height: 46svh;
     grid-template-columns: none; grid-template-rows: repeat(2, 1fr);
@@ -583,7 +583,7 @@ button, input, select { font: inherit; color: inherit; }
   .js .parede__col { translate: 60px 0; }
   .hero__veu {
     background:
-      linear-gradient(180deg, rgba(0,0,0,.7) 0%, rgba(0,0,0,.1) 16%, rgba(0,0,0,.15) 34%, rgba(0,0,0,.85) 56%, #000 70%),
+      linear-gradient(180deg, rgba(0,0,0,.7) 0%, rgba(0,0,0,.1) 16%, rgba(0,0,0,.25) 28%, rgba(0,0,0,.75) 40%, rgba(0,0,0,.92) 54%, #000 68%),
       radial-gradient(ellipse 90% 30% at 50% 40%, rgba(227,20,27,.25), transparent 70%);
   }
   .hero__titulo { font-size: min(2.1rem, 7.9vw); }
