@@ -102,6 +102,13 @@
     });
   });
 
+  /* cliques no Instagram: medidos para saber quantos vão conferir o perfil */
+  doc.querySelectorAll('.js-ig').forEach(function (a) {
+    a.addEventListener('click', function () {
+      window.dataLayer.push({ event: 'instagram_click', placement: a.getAttribute('data-placement') || 'link' });
+    });
+  });
+
   /* =========================================================
      DECODIFICADOR DE MEDIDA
      ========================================================= */
