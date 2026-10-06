@@ -198,103 +198,39 @@
   });
 
   /* =========================================================
-     PNEU GIRANDO COM A ROLAGEM
-     72 quadros do vídeo desenhados num canvas. No desktop o hero fica fixo
-     enquanto a rolagem avança os quadros; no celular gira enquanto o topo sobe.
+     PAREDE DE ESTOQUE (hero)
+     Desktop: colunas sobem e descem em velocidades diferentes com a rolagem.
+     Celular: duas faixas correm em sentidos opostos.
      ========================================================= */
-  (function quadrosHero() {
-    var canvas = doc.getElementById('hero-quadros');
-    if (!canvas || !canvas.getContext) return;
-    if ((navigator.connection || {}).saveData) return; // fica só o primeiro quadro
-    var ctx = canvas.getContext('2d');
-    var total = +canvas.getAttribute('data-total');
-    var pasta = canvas.getAttribute('data-pasta');
-    var trilho = doc.getElementById('hero-trilho');
-    var heroEl = trilho.querySelector('.hero');
-    var palco = heroEl.querySelector('.hero__palco');
-    var dica = doc.getElementById('hero-dica');
+  (function paredeHero() {
+    var parede = doc.getElementById('parede');
+    if (!parede) return;
+    var cols = [].slice.call(parede.querySelectorAll('.parede__col'));
+    var hero = parede.parentElement;
     var mq = window.matchMedia('(max-width: 820px)');
-    var imgs = new Array(total);
-    var atual = 0, alvo = 0, desenhado = -1, rodando = false;
+    var base = [-40, -170, -90, -230]; // colunas desencontradas mesmo parada
+    var pendente = false;
 
-    function arquivo(i) { return pasta + (i < 10 ? '0' : '') + i + '.webp'; }
-    function pronto(im) { return im && im.complete && im.naturalWidth > 0; }
-    function carregar(i) {
-      if (imgs[i]) return;
-      var im = new Image();
-      im.decoding = 'async';
-      im.onload = function () { if (Math.round(atual) === i || desenhado < 0) pedir(true); };
-      im.src = arquivo(i);
-      imgs[i] = im;
+    function aplicar() {
+      pendente = false;
+      var y = window.scrollY;
+      if (y > hero.offsetHeight * 1.3) return;
+      var faixas = mq.matches;
+      cols.forEach(function (c, i) {
+        if (faixas) {
+          var dx = i % 2 ? -400 + y * 0.35 : -y * 0.35;
+          c.style.transform = 'translate3d(' + dx.toFixed(1) + 'px,0,0)';
+        } else {
+          var v = parseFloat(c.getAttribute('data-vel')) || 0;
+          c.style.transform = 'translate3d(0,' + (base[i] + y * v).toFixed(1) + 'px,0)';
+        }
+      });
     }
-    /* primeiro 1 a cada 4 quadros (já permite girar), depois os intermediários */
-    function carregarTodos() {
-      var ordem = [], i, k = 0;
-      for (i = 0; i < total; i += 4) ordem.push(i);
-      for (i = 0; i < total; i++) if (i % 4) ordem.push(i);
-      (function lote() {
-        var fim = Math.min(k + 8, ordem.length);
-        for (; k < fim; k++) carregar(ordem[k]);
-        if (k < ordem.length) setTimeout(lote, 100);
-      })();
-    }
-    function maisProximo(i) {
-      if (pronto(imgs[i])) return imgs[i];
-      for (var d = 1; d < total; d++) {
-        if (pronto(imgs[i - d])) return imgs[i - d];
-        if (pronto(imgs[i + d])) return imgs[i + d];
-      }
-      return null;
-    }
-    function desenhar(i) {
-      var im = maisProximo(i);
-      if (!im) return false;
-      var cw = canvas.width, ch = canvas.height;
-      var s = Math.max(cw / im.naturalWidth, ch / im.naturalHeight);
-      var w = im.naturalWidth * s, h = im.naturalHeight * s;
-      ctx.drawImage(im, (cw - w) * (mq.matches ? 0.64 : 0.68), (ch - h) * 0.5, w, h);
-      return true;
-    }
-    function progresso() {
-      var fixo = getComputedStyle(heroEl).position === 'sticky';
-      // celular: o giro acontece enquanto a faixa do vídeo ainda está visível
-      var faixa = fixo ? trilho.offsetHeight - window.innerHeight : palco.offsetHeight * 0.85;
-      return Math.min(1, Math.max(0, window.scrollY / Math.max(faixa, 1)));
-    }
-    function pedir(forcar) {
-      if (forcar) desenhado = -1;
-      if (!rodando) { rodando = true; requestAnimationFrame(passo); }
-    }
-    function passo() {
-      atual += (alvo - atual) * 0.2; // inércia: o giro acompanha a rolagem com suavidade
-      if (Math.abs(alvo - atual) < 0.05) atual = alvo;
-      var i = Math.round(atual);
-      if (i !== desenhado && desenhar(i)) { desenhado = i; canvas.classList.add('is-pronto'); }
-      if (atual !== alvo) requestAnimationFrame(passo); else rodando = false;
-    }
-    function dimensionar() {
-      var r = canvas.getBoundingClientRect();
-      var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(r.width * dpr);
-      canvas.height = Math.round(r.height * dpr);
-      pedir(true);
-    }
-
     window.addEventListener('scroll', function () {
-      if (window.scrollY > trilho.offsetHeight + 200) return; // hero fora da tela
-      alvo = progresso() * (total - 1);
-      if (dica && window.scrollY > 40) dica.classList.add('is-oculta');
-      pedir();
+      if (!pendente) { pendente = true; requestAnimationFrame(aplicar); }
     }, { passive: true });
-    if ('ResizeObserver' in window) new ResizeObserver(dimensionar).observe(canvas);
-    else window.addEventListener('resize', dimensionar);
-
-    alvo = atual = progresso() * (total - 1);
-    carregar(Math.round(alvo));
-    carregar(0);
-    dimensionar();
-    if (doc.readyState === 'complete') carregarTodos();
-    else window.addEventListener('load', carregarTodos);
+    if (mq.addEventListener) mq.addEventListener('change', aplicar);
+    aplicar();
   })();
 
   /* =========================================================
