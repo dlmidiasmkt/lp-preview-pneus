@@ -209,7 +209,9 @@ button, input, select { font: inherit; color: inherit; }
 }
 .hero__texto { position: relative; z-index: 2; max-width: 760px; }
 .hero__selo { display: inline-flex; align-items: center; gap: 10px; color: var(--cromo); font-weight: 600; font-size: .95rem; margin-bottom: 22px; }
-.hero__estrelas { color: #f5b301; letter-spacing: .12em; }
+.hero__estrelas { color: #f5b301; letter-spacing: .12em; flex: none; }
+.hero__selo q { color: var(--branco); font-weight: 700; font-style: italic; quotes: "“" "”"; }
+.hero__autor { color: var(--texto-suave); font-weight: 500; }
 .hero__titulo {
   font-size: clamp(2.1rem, 1rem + 3vw, 3.9rem);
   font-weight: 900; font-stretch: 112%;
@@ -224,6 +226,11 @@ button, input, select { font: inherit; color: inherit; }
   margin-top: 46px; padding-top: 26px; border-top: 1px solid rgba(199,203,209,.16);
   display: grid; grid-template-columns: repeat(4, auto); gap: 8px 32px; justify-content: start;
   color: var(--texto-suave); font-size: .9rem; line-height: 1.35;
+}
+.hero__fatos li { position: relative; padding-left: 30px; }
+.hero__fatos li::before {
+  content: ""; position: absolute; left: 0; top: 3px; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--vermelho) url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 20%27%3E%3Cpath d=%27M5.5 10.5l3 3 6-7%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272.4%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E") center / 14px no-repeat;
 }
 .hero__fatos strong { display: block; color: var(--branco); font-stretch: var(--larg-cond); font-weight: 800; font-size: 1.25rem; }
 
