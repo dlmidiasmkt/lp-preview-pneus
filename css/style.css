@@ -429,8 +429,20 @@ button, input, select { font: inherit; color: inherit; }
   max-width: var(--max); margin: 0 auto; padding: var(--secao) var(--gutter);
   display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(32px, 6vw, 80px); align-items: center;
 }
-.loja__foto { position: relative; border-radius: 26px; overflow: hidden; aspect-ratio: 4 / 5; box-shadow: 0 40px 80px -40px rgba(0,0,0,.55); }
-.loja__foto img { width: 100%; height: 100%; object-fit: cover; }
+.loja__mapa {
+  display: flex; flex-direction: column;
+  border-radius: 26px; overflow: hidden; aspect-ratio: 4 / 5;
+  background: var(--tinta);
+  box-shadow: 0 0 0 1px var(--linha-clara), 0 40px 80px -40px rgba(0,0,0,.55);
+}
+.loja__mapa iframe { display: block; flex: 1; width: 100%; min-height: 0; border: 0; background: var(--linha-clara); }
+/* faixa da marca abaixo do mapa: não cobre os créditos do Google */
+.loja__selo {
+  display: flex; align-items: center; gap: 12px; padding: 14px 18px;
+  color: var(--texto-suave); font-size: .85rem; line-height: 1.3;
+}
+.loja__selo img { width: 44px; height: 44px; border-radius: 50%; flex: none; }
+.loja__selo strong { display: block; color: var(--branco); font-size: .98rem; font-weight: 800; font-stretch: 110%; }
 .loja .titulo-secao { color: var(--tinta); }
 .loja .texto-secao { color: var(--tinta-suave); margin-top: 14px; }
 .loja__end { margin-top: 26px; font-style: normal; color: var(--tinta-suave); line-height: 1.55; padding-left: 16px; border-left: 3px solid var(--vermelho); }
@@ -566,8 +578,7 @@ button, input, select { font: inherit; color: inherit; }
   .medida__inner { grid-template-columns: 1fr; }
   .medida__visor { order: 2; }
   .loja__inner { grid-template-columns: 1fr; }
-  .loja__foto { aspect-ratio: 4 / 3; }
-  .loja__foto img { object-position: 50% 25%; }
+  .loja__mapa { aspect-ratio: auto; height: min(118vw, 460px); }
   .atacado__grade { grid-template-columns: 1fr; }
   .atacado__col, .atacado__col--forte { padding: 56px var(--gutter); }
   .rodape__inner { grid-template-columns: 1fr; }
