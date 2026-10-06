@@ -554,7 +554,7 @@ button, input, select { font: inherit; color: inherit; }
   html { scroll-padding-top: 72px; }
   .topo .btn { display: none; }
   .hero {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     min-height: auto;
     padding-top: 0;
     padding-bottom: 48px;
