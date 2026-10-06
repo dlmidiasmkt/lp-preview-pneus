@@ -130,6 +130,54 @@
 
   var elLeitura = doc.getElementById('leitura-medida');
   var elExp = doc.getElementById('leitura-exp');
+  var elLegenda = doc.getElementById('leitura-foto');
+  var figura = doc.getElementById('medida-foto');
+
+  /* Uma foto real do estoque por categoria. Nenhuma tem a medida impressa à vista,
+     para nunca contradizer a medida escolhida. Tabela fixa: a mesma escolha mostra sempre a mesma foto. */
+  var FOTOS = {
+    'pneu|uso misto (A/T)':      { src: 'assets/real/xbri.webp',         legenda: 'Foto ilustrativa: pneu all-terrain (A/T)',   alt: 'Foto ilustrativa: pilha de pneus all-terrain Xbri Brutus T/A no estoque da Noronha' },
+    'pneu|lama e trilha (M/T)':  { src: 'assets/real/banda.webp',        legenda: 'Foto ilustrativa: pneu mud-terrain (M/T)',   alt: 'Foto ilustrativa: banda de rodagem de pneu mud-terrain no estoque da Noronha' },
+    'pneu|estrada (H/T)':        { src: 'assets/real/asfalto.webp',      legenda: 'Foto ilustrativa: pneu para asfalto',        alt: 'Foto ilustrativa: banda de rodagem de pneu para asfalto no estoque da Noronha' },
+    'pneu|ainda não sei':        { src: 'assets/real/galeria-4.webp',    legenda: 'Foto ilustrativa: pneus do nosso estoque',   alt: 'Foto ilustrativa: pneus embalados no estoque da Noronha' },
+    'roda':                      { src: 'assets/real/roda-hilux.webp',   legenda: 'Foto ilustrativa: roda do nosso estoque',    alt: 'Foto ilustrativa: roda diamantada no estoque da Noronha' },
+    'pneu e roda':               { src: 'assets/real/roda-porsche.webp', legenda: 'Foto ilustrativa: pneu montado na roda',     alt: 'Foto ilustrativa: rodas com pneus montados no estoque da Noronha' }
+  };
+  function chaveFoto(tipo, uso) { return tipo === 'pneu' ? 'pneu|' + uso : tipo; }
+
+  var camadas = figura ? figura.querySelectorAll('.medida__img') : [];
+  var fotoAtual = 'pneu|uso misto (A/T)';
+  var pedidoFoto = 0;
+  function trocarFoto(chave) {
+    var foto = FOTOS[chave];
+    if (!foto || !camadas.length || chave === fotoAtual) return;
+    fotoAtual = chave;
+    var pedido = ++pedidoFoto;
+    var ativa = figura.querySelector('.medida__img.is-ativa');
+    var proxima = camadas[0] === ativa ? camadas[1] : camadas[0];
+    var mostrar = function () {
+      if (pedido !== pedidoFoto) return; // o cliente já escolheu outra opção
+      proxima.alt = foto.alt;
+      proxima.removeAttribute('aria-hidden');
+      ativa.alt = '';
+      ativa.setAttribute('aria-hidden', 'true');
+      proxima.classList.add('is-ativa');
+      ativa.classList.remove('is-ativa');
+    };
+    proxima.onload = mostrar;
+    proxima.src = foto.src;
+    if (proxima.complete && proxima.naturalWidth) mostrar();
+    elLegenda.textContent = foto.legenda;
+  }
+  /* pré-carrega as 6 fotos quando a seção se aproxima, para a troca ser imediata */
+  if (figura && 'IntersectionObserver' in window) {
+    var preObs = new IntersectionObserver(function (es) {
+      if (!es[0].isIntersecting) return;
+      preObs.disconnect();
+      Object.keys(FOTOS).forEach(function (k) { var im = new Image(); im.src = FOTOS[k].src; });
+    }, { rootMargin: '600px 0px' });
+    preObs.observe(figura);
+  }
 
   function atualizarVisor() {
     var tipo = tipoAtual();
@@ -148,6 +196,7 @@
     elExp.textContent = ehRoda
       ? 'Roda aro ' + selA.value + '. Informe o veículo para conferirmos a furação.'
       : selL.value + ' mm de largura, lateral com ' + selP.value + '% dessa largura, para roda aro ' + selA.value + '.';
+    trocarFoto(chaveFoto(tipo, usoAtual()));
   }
 
   if (form) {
@@ -190,6 +239,7 @@
       var m = b.getAttribute('data-medida').match(/(\d+)\/(\d+)\s*R(\d+)/);
       if (!m || !form) return;
       form.querySelector('input[name="tipo"][value="pneu"]').checked = true;
+      form.querySelector('input[name="uso"][value="uso misto (A/T)"]').checked = true; // Xbri Brutus T/A é all-terrain
       selL.value = m[1]; selP.value = m[2]; selA.value = m[3];
       atualizarVisor();
       doc.getElementById('medida').scrollIntoView({ behavior: reduzMovimento ? 'auto' : 'smooth' });
