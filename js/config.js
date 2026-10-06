@@ -1,6 +1,6 @@
 /*
  * Configuração central da landing page Noronha Pneus e Rodas.
- * Tudo que muda com frequência (contato, preços, oferta, IDs de anúncio) fica aqui.
+ * Contato e IDs de anúncio ficam aqui.
  * Ao trocar o domínio, atualize também: index.html (canonical, og:url, JSON-LD), robots.txt, sitemap.xml e llms.txt.
  */
 window.NORONHA = {
@@ -9,10 +9,6 @@ window.NORONHA = {
   whatsapp: '554991475797',
   telefoneExibicao: '(49) 99147-5797',
   instagram: 'https://www.instagram.com/noronha.pneus/',
-
-  // Oferta Xbri Brutus T/A publicada em 05/10/2026: "válido até dia 30/10 ou até durar estoque".
-  // Depois desta data, os preços da oferta somem da página e viram "Consulte o preço".
-  ofertaXbriFim: '2026-10-30T23:59:59-03:00',
 
   // IDs de mídia paga. Deixe vazio o que ainda não existe; nada é carregado sem ID.
   tracking: {

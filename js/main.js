@@ -198,72 +198,103 @@
   });
 
   /* =========================================================
-     VÍDEO DO HERO
-     Versão vertical no celular, horizontal no desktop. Vídeo mudo e decorativo:
-     toca para todos, com botão de pausa (WCAG 2.2.2). Em economia de dados fica só a capa.
+     PNEU GIRANDO COM A ROLAGEM
+     72 quadros do vídeo desenhados num canvas. No desktop o hero fica fixo
+     enquanto a rolagem avança os quadros; no celular gira enquanto o topo sobe.
      ========================================================= */
-  (function videoHero() {
-    var v = doc.getElementById('hero-video');
-    if (!v) return;
-    var conexao = navigator.connection || {};
-    var botao = doc.getElementById('hero-pausa');
-    if (conexao.saveData) { if (botao) botao.hidden = true; return; } // fica só a imagem de capa
+  (function quadrosHero() {
+    var canvas = doc.getElementById('hero-quadros');
+    if (!canvas || !canvas.getContext) return;
+    if ((navigator.connection || {}).saveData) return; // fica só o primeiro quadro
+    var ctx = canvas.getContext('2d');
+    var total = +canvas.getAttribute('data-total');
+    var pasta = canvas.getAttribute('data-pasta');
+    var trilho = doc.getElementById('hero-trilho');
+    var heroEl = trilho.querySelector('.hero');
+    var palco = heroEl.querySelector('.hero__palco');
+    var dica = doc.getElementById('hero-dica');
     var mq = window.matchMedia('(max-width: 820px)');
-    var visivel = true;
-    var pausadoPeloUsuario = ler('noronha_video_pausado') === '1';
+    var imgs = new Array(total);
+    var atual = 0, alvo = 0, desenhado = -1, rodando = false;
 
-    function rotularBotao() {
-      if (!botao) return;
-      botao.setAttribute('aria-pressed', pausadoPeloUsuario ? 'true' : 'false');
-      botao.setAttribute('aria-label', pausadoPeloUsuario ? 'Reproduzir vídeo de fundo' : 'Pausar vídeo de fundo');
+    function arquivo(i) { return pasta + (i < 10 ? '0' : '') + i + '.webp'; }
+    function pronto(im) { return im && im.complete && im.naturalWidth > 0; }
+    function carregar(i) {
+      if (imgs[i]) return;
+      var im = new Image();
+      im.decoding = 'async';
+      im.onload = function () { if (Math.round(atual) === i || desenhado < 0) pedir(true); };
+      im.src = arquivo(i);
+      imgs[i] = im;
     }
-    if (botao) {
-      botao.addEventListener('click', function () {
-        pausadoPeloUsuario = !pausadoPeloUsuario;
-        gravar('noronha_video_pausado', pausadoPeloUsuario ? '1' : '0');
-        rotularBotao();
-        pausadoPeloUsuario ? v.pause() : tocar();
-      });
-      rotularBotao();
+    /* primeiro 1 a cada 4 quadros (já permite girar), depois os intermediários */
+    function carregarTodos() {
+      var ordem = [], i, k = 0;
+      for (i = 0; i < total; i += 4) ordem.push(i);
+      for (i = 0; i < total; i++) if (i % 4) ordem.push(i);
+      (function lote() {
+        var fim = Math.min(k + 8, ordem.length);
+        for (; k < fim; k++) carregar(ordem[k]);
+        if (k < ordem.length) setTimeout(lote, 100);
+      })();
+    }
+    function maisProximo(i) {
+      if (pronto(imgs[i])) return imgs[i];
+      for (var d = 1; d < total; d++) {
+        if (pronto(imgs[i - d])) return imgs[i - d];
+        if (pronto(imgs[i + d])) return imgs[i + d];
+      }
+      return null;
+    }
+    function desenhar(i) {
+      var im = maisProximo(i);
+      if (!im) return false;
+      var cw = canvas.width, ch = canvas.height;
+      var s = Math.max(cw / im.naturalWidth, ch / im.naturalHeight);
+      var w = im.naturalWidth * s, h = im.naturalHeight * s;
+      ctx.drawImage(im, (cw - w) * (mq.matches ? 0.64 : 0.68), (ch - h) * 0.5, w, h);
+      return true;
+    }
+    function progresso() {
+      var fixo = getComputedStyle(heroEl).position === 'sticky';
+      // celular: o giro acontece enquanto a faixa do vídeo ainda está visível
+      var faixa = fixo ? trilho.offsetHeight - window.innerHeight : palco.offsetHeight * 0.85;
+      return Math.min(1, Math.max(0, window.scrollY / Math.max(faixa, 1)));
+    }
+    function pedir(forcar) {
+      if (forcar) desenhado = -1;
+      if (!rodando) { rodando = true; requestAnimationFrame(passo); }
+    }
+    function passo() {
+      atual += (alvo - atual) * 0.2; // inércia: o giro acompanha a rolagem com suavidade
+      if (Math.abs(alvo - atual) < 0.05) atual = alvo;
+      var i = Math.round(atual);
+      if (i !== desenhado && desenhar(i)) { desenhado = i; canvas.classList.add('is-pronto'); }
+      if (atual !== alvo) requestAnimationFrame(passo); else rodando = false;
+    }
+    function dimensionar() {
+      var r = canvas.getBoundingClientRect();
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(r.width * dpr);
+      canvas.height = Math.round(r.height * dpr);
+      pedir(true);
     }
 
-    function carregar() {
-      var tipo = mq.matches ? 'mobile' : 'desktop';
-      if (v.getAttribute('data-atual') === tipo) return;
-      v.setAttribute('data-atual', tipo);
-      v.classList.remove('is-tocando');
-      v.poster = v.getAttribute('data-' + tipo + '-poster');
-      v.src = v.getAttribute('data-' + tipo);
-      v.load();
-      tocar();
-    }
-    function tocar() {
-      if (!visivel || doc.hidden || pausadoPeloUsuario) return;
-      var p = v.play();
-      if (p && p.catch) p.catch(function () { /* autoplay bloqueado: fica a capa */ });
-    }
-    v.addEventListener('playing', function () { v.classList.add('is-tocando'); });
-    if (mq.addEventListener) mq.addEventListener('change', carregar);
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (es) {
-        visivel = es[0].isIntersecting;
-        visivel ? tocar() : v.pause();
-      }).observe(v);
-    }
-    doc.addEventListener('visibilitychange', function () { doc.hidden ? v.pause() : tocar(); });
-    carregar();
-  })();
+    window.addEventListener('scroll', function () {
+      if (window.scrollY > trilho.offsetHeight + 200) return; // hero fora da tela
+      alvo = progresso() * (total - 1);
+      if (dica && window.scrollY > 40) dica.classList.add('is-oculta');
+      pedir();
+    }, { passive: true });
+    if ('ResizeObserver' in window) new ResizeObserver(dimensionar).observe(canvas);
+    else window.addEventListener('resize', dimensionar);
 
-  /* =========================================================
-     OFERTA COM PRAZO
-     ========================================================= */
-  (function validarOferta() {
-    var fim = Date.parse(CFG.ofertaXbriFim || '');
-    if (!fim || Date.now() <= fim) return;
-    doc.querySelectorAll('.js-oferta, .js-oferta-preco').forEach(function (el) { el.hidden = true; });
-    doc.querySelectorAll('.js-oferta-fim').forEach(function (el) { el.hidden = false; });
-    var tit = doc.querySelector('.destaque__medidas-tit');
-    if (tit) tit.textContent = 'Medidas da linha';
+    alvo = atual = progresso() * (total - 1);
+    carregar(Math.round(alvo));
+    carregar(0);
+    dimensionar();
+    if (doc.readyState === 'complete') carregarTodos();
+    else window.addEventListener('load', carregarTodos);
   })();
 
   /* =========================================================

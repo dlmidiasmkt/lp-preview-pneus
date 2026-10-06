@@ -16,7 +16,7 @@
   <meta property="og:locale" content="pt_BR">
   <meta property="og:site_name" content="Noronha Pneus e Rodas">
   <meta property="og:title" content="Noronha Pneus e Rodas: pneus e rodas importados para quem exige mais">
-  <meta property="og:description" content="Xbri Brutus T/A a partir de R$399, BFGoodrich, Maxxis e rodas importadas. Até 10x no cartão e envio para todo o Brasil.">
+  <meta property="og:description" content="Xbri Brutus T/A, BFGoodrich, Maxxis e rodas importadas. Até 10x no cartão e envio para todo o Brasil.">
   <meta property="og:url" content="https://www.noronhapneus.com.br/">
   <meta property="og:image" content="https://www.noronhapneus.com.br/assets/og-image.jpg">
   <meta property="og:image:width" content="1200">
@@ -35,10 +35,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,300..900&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="assets/video/hero-desktop.jpg">
+  <link rel="preload" as="image" href="assets/frames/00.webp" fetchpriority="high">
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- Dados estruturados: loja, catálogo e ofertas -->
+  <!-- Dados estruturados: loja, catálogo e perguntas frequentes -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -62,7 +62,6 @@
           "addressCountry": "BR"
         },
         "hasMap": "https://www.google.com/maps/search/?api=1&query=Rua+Eurico+Duwe+3343+Rio+da+Luz+Jaragua+do+Sul+SC",
-        "priceRange": "R$399 - R$2.799",
         "currenciesAccepted": "BRL",
         "paymentAccepted": "Cartão de crédito em até 10x, PIX, dinheiro",
         "areaServed": { "@type": "Country", "name": "Brasil" },
@@ -82,25 +81,6 @@
             { "@type": "OfferCatalog", "name": "Pneus mud-terrain (M/T)" },
             { "@type": "OfferCatalog", "name": "Rodas para picapes e esportivas" }
           ]
-        }
-      },
-      {
-        "@type": "Product",
-        "@id": "https://www.noronhapneus.com.br/#xbri-brutus",
-        "name": "Pneu Xbri Brutus T/A",
-        "brand": { "@type": "Brand", "name": "Xbri" },
-        "category": "Pneu all-terrain para SUVs e picapes",
-        "image": "https://www.noronhapneus.com.br/assets/img/pneu-at.webp",
-        "description": "Pneu all-terrain com alta resistência, tração no asfalto e fora dele e bom desempenho em piso molhado. Disponível do aro 15 ao 18.",
-        "offers": {
-          "@type": "AggregateOffer",
-          "priceCurrency": "BRL",
-          "lowPrice": "399.00",
-          "highPrice": "699.00",
-          "offerCount": "8",
-          "availability": "https://schema.org/InStock",
-          "priceValidUntil": "2026-10-30",
-          "seller": { "@id": "https://www.noronhapneus.com.br/#loja" }
         }
       },
       {
@@ -156,17 +136,14 @@
 
   <main id="conteudo">
     <!-- HERO -->
+    <div class="hero-trilho" id="hero-trilho">
     <section class="hero" aria-labelledby="hero-titulo">
       <div class="hero__palco" aria-hidden="true">
-        <video class="hero__video" id="hero-video" muted loop playsinline preload="none"
-          poster="assets/video/hero-desktop.jpg"
-          data-desktop="assets/video/hero-desktop.mp4" data-desktop-poster="assets/video/hero-desktop.jpg"
-          data-mobile="assets/video/hero-desktop.mp4" data-mobile-poster="assets/video/hero-desktop.jpg"></video>
+        <img class="hero__capa" src="assets/frames/00.webp" width="1280" height="720" alt="" fetchpriority="high" decoding="async">
+        <canvas class="hero__quadros" id="hero-quadros" data-total="72" data-pasta="assets/frames/"></canvas>
         <div class="hero__veu"></div>
       </div>
-      <button class="hero__pausa" id="hero-pausa" type="button" aria-label="Pausar vídeo de fundo" aria-pressed="false">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-pausa" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/><path class="i-play" d="M8 5v14l11-7z"/></svg>
-      </button>
+      <p class="hero__dica" id="hero-dica" aria-hidden="true"><span class="hero__dica-mouse"></span>Role para girar</p>
       <div class="hero__texto">
         <p class="hero__selo">5 mil clientes atendidos em todo o Brasil</p>
         <h1 id="hero-titulo" class="hero__titulo">
@@ -192,6 +169,7 @@
         </ul>
       </div>
     </section>
+    </div>
 
     <!-- MARCAS -->
     <section class="marcas" aria-label="Marcas que a Noronha trabalha">
@@ -301,19 +279,14 @@
           <img src="assets/img/pneu-at.webp" width="1280" height="1280" alt="Pneu all-terrain importado com banda de rodagem agressiva, iluminado em vermelho" loading="lazy" decoding="async">
         </div>
         <div class="destaque__info">
-          <p class="destaque__oferta js-oferta">Oferta do mês até 30/10 ou enquanto durar o estoque</p>
+          <p class="destaque__oferta">Linha em destaque</p>
           <h3 id="xbri-titulo" class="destaque__nome">Xbri Brutus T/A</h3>
           <p class="destaque__desc">All-terrain para SUVs e picapes. Alta resistência, tração no asfalto e fora dele, e controle em piso molhado.</p>
-          <p class="destaque__preco js-oferta-preco">
-            <span class="destaque__de">a partir de</span>
-            <span class="destaque__valor">R$399</span>
-            <span class="destaque__cond">por unidade, na medida 205/70 R15</span>
+          <p class="destaque__preco">
+            <span class="destaque__valor destaque__valor--sm">Aro 15 ao 18</span>
+            <span class="destaque__cond">Preço da sua medida direto no WhatsApp, em até 10x no cartão</span>
           </p>
-          <p class="destaque__preco destaque__preco--off js-oferta-fim" hidden>
-            <span class="destaque__valor destaque__valor--sm">Consulte o preço</span>
-            <span class="destaque__cond">Medidas do aro 15 ao 18</span>
-          </p>
-          <p class="destaque__medidas-tit">Medidas na oferta</p>
+          <p class="destaque__medidas-tit">Medidas da linha</p>
           <ul class="destaque__medidas" aria-label="Medidas disponíveis do Xbri Brutus T/A">
             <li><button type="button" class="chip js-chip" data-medida="205/70 R15">205/70 R15</button></li>
             <li><button type="button" class="chip js-chip" data-medida="205/70 R16">205/70 R16</button></li>
@@ -334,7 +307,7 @@
       <div class="linhas">
         <article class="linha-prod">
           <h3 class="linha-prod__nome">BFGoodrich All-Terrain</h3>
-          <p class="linha-prod__desc">O KO2 e o novo KO3, referência em picape. Chegam em lotes pequenos por medida.</p>
+          <p class="linha-prod__desc">O KO2 e o KO3, referência em picape. Chegam em lotes pequenos por medida.</p>
           <p class="linha-prod__cond">Até 10x no cartão</p>
           <a class="btn btn--ghost btn--sm js-wa" data-placement="bfgoodrich" data-msg="Olá! Vim pelo site da Noronha Pneus. Quero saber as medidas disponíveis do BFGoodrich All-Terrain (KO2/KO3)." href="https://wa.me/554991475797" target="_blank" rel="noopener"><span>Ver medidas disponíveis</span></a>
         </article>
@@ -348,7 +321,7 @@
           <img src="assets/img/roda-picape.webp" width="1280" height="1280" alt="Roda de liga leve diamantada para picape, com detalhe vermelho na borda" loading="lazy" decoding="async">
           <div>
             <h3 class="linha-prod__nome">Rodas para Hilux e picapes</h3>
-            <p class="linha-prod__desc">Aro 17 e 18, jogo a partir de R$2.099 em até 10x sem juros. Também rodas esportivas aro 14 a 21 e kits importados.</p>
+            <p class="linha-prod__desc">Aro 17 e 18, em até 10x no cartão. Também rodas esportivas aro 14 a 21 e kits importados.</p>
             <a class="btn btn--ghost btn--sm js-wa" data-placement="rodas" data-msg="Olá! Vim pelo site da Noronha Pneus. Quero cotação de rodas." href="https://wa.me/554991475797" target="_blank" rel="noopener"><span>Cotar rodas</span></a>
           </div>
         </article>
@@ -407,6 +380,31 @@
         </li>
       </ul>
       <a class="link-ig" href="https://www.instagram.com/noronha.pneus/" target="_blank" rel="noopener">Ver mais entregas no Instagram @noronha.pneus</a>
+    </section>
+
+    <!-- AVALIAÇÕES REAIS (Google, publicadas pela Noronha no Instagram) -->
+    <section class="avaliacoes" aria-labelledby="avaliacoes-titulo">
+      <div class="secao__cab">
+        <h2 id="avaliacoes-titulo" class="titulo-secao">Quem compra, recomenda</h2>
+        <p class="texto-secao">Avaliações de clientes no Google.</p>
+      </div>
+      <ul class="avaliacoes__lista">
+        <li class="avaliacao">
+          <p class="avaliacao__estrelas" aria-label="5 de 5 estrelas">★★★★★</p>
+          <blockquote class="avaliacao__texto">“A transparência e o cuidado desta empresa, para com seus cliente, me deixou muito satisfeito e surpreso. Pode haver uma empresa igual a essa, melhor, tenho minhas dúvidas.”</blockquote>
+          <p class="avaliacao__autor">Danilo S. <span>Avaliação no Google</span></p>
+        </li>
+        <li class="avaliacao">
+          <p class="avaliacao__estrelas" aria-label="5 de 5 estrelas">★★★★★</p>
+          <blockquote class="avaliacao__texto">“Incrível! Atendimento nota 1000.”</blockquote>
+          <p class="avaliacao__autor">Jane T. <span>Avaliação no Google</span></p>
+        </li>
+        <li class="avaliacao">
+          <p class="avaliacao__estrelas" aria-label="5 de 5 estrelas">★★★★★</p>
+          <blockquote class="avaliacao__texto">“Foi uma experiência, maravilhosa. Ótimo atendimento!”</blockquote>
+          <p class="avaliacao__autor">Cesar N. <span>Avaliação no Google</span></p>
+        </li>
+      </ul>
     </section>
 
     <!-- VAREJO E ATACADO -->
@@ -483,7 +481,7 @@
         <li><a class="js-wa" data-placement="rodape" href="https://wa.me/554991475797" target="_blank" rel="noopener">WhatsApp (49) 99147-5797</a></li>
         <li><a href="https://www.instagram.com/noronha.pneus/" target="_blank" rel="noopener">Instagram @noronha.pneus</a></li>
       </ul>
-      <p class="rodape__legal">Preços e disponibilidade sujeitos a alteração sem aviso. Oferta Xbri Brutus T/A válida até 30/10/2026 ou enquanto durar o estoque. <button type="button" class="link-sutil" id="abrir-cookies">Preferências de cookies</button></p>
+      <p class="rodape__legal">Disponibilidade de medidas e condições de pagamento confirmadas no atendimento. <button type="button" class="link-sutil" id="abrir-cookies">Preferências de cookies</button></p>
     </div>
   </footer>
 
